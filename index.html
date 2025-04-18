@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerador de Artigos da Wikipedia</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f9f9f9;
+    }
+    h1 {
+      color: #333;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    #result {
+      margin-top: 30px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gerador de Artigos da Wikipedia!!</h1>
+
+  <label for="topic">Digite o tópico:</label><br>
+  <input type="text" id="topic" placeholder="Ex: Inteligência Artificial" /><br>
+  <button onclick="gerarArtigo()">Gerar Artigo</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function gerarArtigo() {
+      const topic = document.getElementById("topic").value;
+      const resultDiv = document.getElementById("result");
+
+      if (!topic) {
+        alert("Por favor, digite um tópico!");
+        return;
+      }
+
+      resultDiv.innerHTML = "Gerando artigo, por favor aguarde...";
+
+      try {
+        const response = await fetch(`/generate-article/?topic=${encodeURIComponent(topic)}`);
+        if (!response.ok) throw new Error("Erro na resposta da API");
+
+        const data = await response.json();
+        resultDiv.innerHTML = `<h2>${data.title}</h2><p>${data.content}</p>`;
+      } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = "Erro ao gerar o artigo. Verifique o console.";
+      }
+    }
+  </script>
+</body>
+</html>
